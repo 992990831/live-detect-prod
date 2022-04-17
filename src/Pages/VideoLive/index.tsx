@@ -7,28 +7,91 @@ import './index.css';
 //这里因为用了browserrouter，所以要加。如果用hashrouter就不用了。
 //同时要和package.json中的homepage参数保持一致
 import { Common } from '../../Common';
+import { VerifyAccount } from '../../Util/Util';
+import queryString from 'query-string';
 
 const token = '24.8b5d9f9d25257ac79bdc93b47b65f256.2592000.1650612168.282335-25828496';
 
+
+
 export const VideoLive = () => {
+    const navigate = useNavigate();
     const camRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [sessionCode, setSessionCode] = useState('');
     const [actions, setActions] = useState('');
     const [btnDisable, setBtnDisable] = useState(false);
-    useEffect(() => {
-        GetSessionCode(token).then((result) => {
-            if(result[0]==='XXX')
-            {
-                setBtnDisable(true);
-                return;
-            }
-            setSessionCode(result[0]);
-            setActions(result[1]);
-        });
-    }, []);
 
-    const navigate = useNavigate();
+    //验证商户号(ClientId)和账号(Account)
+    //url中的account是加密后的
+    const Verify = async ():Promise<boolean> => {
+        let params: any = { clientId: '', account: '' };
+        if (window.location.search) {
+            params = queryString.parse(window.location.search);
+        }
+        else if (window.location.hash.indexOf('?') > -1) {
+            params = queryString.parse(window.location.hash.split('?')[1]);
+        }
+    
+        //写两个，防止大小写错误
+        let { clientId, clientid, account } = params;
+    
+        if (!(clientId || clientid) || !account) //必须要在url中传入clientId和account
+        {
+            navigate('unauthorized/缺少商户号或账号');
+            return false;
+        }
+        
+        debugger
+        var response = await VerifyAccount(clientId, account);
+        
+        if (!response || !response.success) {
+            navigate('unauthorized/商户号或账号错误');
+            return false;
+        }
+        else {
+            localStorage.setItem('clientId', params.clientId || params.clientid);
+            localStorage.setItem('account', response.account);
+        }
+
+        // .then((response: any) => {
+        //     if (!response || !response.success) {
+        //         navigate('unauthorized/商户号或账号错误');
+        //         return false;
+        //     }
+        //     else {
+        //         localStorage.setItem('clientId', params.clientId || params.clientid);
+        //         localStorage.setItem('account', response.account);
+        //     }
+    
+        // }).catch(() => {
+        //     navigate('unauthorized/商户号或账号错误');
+        //     return false;
+        // })
+        
+        return true;
+    }
+
+    useEffect(() => {
+        //因为useEffect不支持async/awiat，所以用的workaround
+        const fn = async () =>{
+            let result = await Verify();
+            debugger;
+            if(result)
+            {
+                GetSessionCode(token).then((result) => {
+                    if (result[0] === 'XXX') {
+                        setBtnDisable(true);
+                        return;
+                    }
+                    setSessionCode(result[0]);
+                    setActions(result[1]);
+                });
+            }
+        };
+
+        fn();
+    }, []);
 
     const onCameraClick = () => {
         camRef.current && (camRef.current as HTMLInputElement).click();
@@ -58,10 +121,10 @@ export const VideoLive = () => {
                 VideoVerify(token, sessionCode, encodeURIComponent(dataBase64.split(',')[1]))
                     .then((score) => {
                         if (score >= 0.75) {
-                            navigate(Common.Home + '/success');
+                            navigate(Common.Home + '/success' + window.location.search);
                         }
                         else {
-                            navigate(Common.Home + '/fail');
+                            navigate(Common.Home + '/fail' + window.location.search);
                         }
 
                         setLoading(false);
@@ -73,7 +136,7 @@ export const VideoLive = () => {
     return (
         <>
             <p className='title'>请按要求录制视频</p>
-            <img src={avator} alt='avator' style={{width:'30vw', left:'35vw', position:'relative'}} />
+            <img src={avator} alt='avator' style={{ width: '30vw', left: '35vw', position: 'relative' }} />
             <p className='action-num'>{actions}</p>
             <ul className='notice'>
                 <li>环境安静，光线充足</li>
@@ -112,7 +175,7 @@ export const VideoLive = () => {
                 </div>
             </div> */}
 
-            <Space wrap block style={{ '--gap-vertical': '12px', position:'fixed', bottom:'30px', left:'15vw' }} align='center' justify='center' direction='vertical'>
+            <Space wrap block style={{ '--gap-vertical': '12px', position: 'fixed', bottom: '30px', left: '15vw' }} align='center' justify='center' direction='vertical'>
                 <Button disabled={btnDisable} shape='rounded' block color='primary' size='large' onClick={onCameraClick} style={{ width: '70vw' }}>
                     开始录制
                 </Button>

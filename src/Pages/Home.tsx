@@ -12,7 +12,7 @@ import { Common } from '../Common';
 function Home() {
   const navigate = useNavigate();
   //const [clientId, setClientId] = useState();
-  const [account, setAccount] = useState();
+  const [decryptedAccount, setDecryptedAccount] = useState('');
 
   useEffect(() => {
     let params: any = { clientId: '', account: '' };
@@ -23,25 +23,15 @@ function Home() {
       params = queryString.parse(window.location.hash.split('?')[1]);
     }
 
-    debugger
     //写两个，防止大小写错误
     let { clientId, clientid, account } = params;
 
     //存localstorage是考虑到有可能结束后再从succss、fail页面跳转过来，就没有querystring了
-    if(!clientId && !clientid)
+    if(localStorage.getItem('clientId') && localStorage.getItem('account'))
     {
-      clientId = localStorage.getItem('clientId');
-    }
-    else {
-      localStorage.removeItem('clientId');
-    }
-
-    if(!account)
-    {
-      account = localStorage.getItem('account');
-    } 
-    else {
-      localStorage.removeItem('account');
+      let decAcc = localStorage.getItem('account');
+      setDecryptedAccount(decAcc?? '');
+      return;
     }
 
     if (!(clientId || clientid) || !account) //必须要在url中传入clientId和account
@@ -57,7 +47,7 @@ function Home() {
       else {
         localStorage.setItem('clientId', params.clientId || params.clientid);
         localStorage.setItem('account', response.account);
-        setAccount(response.account);
+        setDecryptedAccount(response.account);
       }
       
     }).catch(()=>{
@@ -78,8 +68,8 @@ function Home() {
     <>
       <img src={logo} alt="" className="logo" />
       {
-       account &&  <>
-          <p className='comment'>欢迎, {localStorage.getItem('account')}</p>
+       decryptedAccount &&  <>
+          <p className='comment'>欢迎, {decryptedAccount}</p>
         </>
       }
       

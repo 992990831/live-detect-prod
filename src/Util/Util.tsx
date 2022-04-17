@@ -67,6 +67,7 @@ export const VideoVerify = async (token:string, sessionCode: string, videoBase64
     });
     //alert(JSON.stringify(json));
     
+    debugger
     let success = json.err_msg === 'SUCCESS';
 
     if(success)

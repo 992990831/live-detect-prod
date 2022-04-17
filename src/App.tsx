@@ -16,7 +16,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path={Common.Home+"/"} element={<Home></Home>} />
+          <Route path={Common.Home+"/"} element={<VideoLive></VideoLive>} />
           <Route path={Common.Home+"/success"} element={<Success></Success>} />
           <Route path={Common.Home+"/fail"} element={<Fail></Fail>} />
           <Route path={Common.Home+"/piclive"} element={<PicLive></PicLive>} />
@@ -37,7 +37,7 @@ function App() {
           {/* <Route path="*" element={<Exterior></Exterior>} /> */}
         </Routes>
       </Router>
-      <p className='App-term'>—上海敏识网络科技有限公司提供技术支持—</p>
+      {/* <p className='App-term'>—上海敏识网络科技有限公司提供技术支持—</p> */}
     </>
 
 

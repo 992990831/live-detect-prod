@@ -11,7 +11,7 @@ export const Success = () => {
     const navigate = useNavigate();
 
     const tryAgain = () => {
-        navigate(Common.Home);
+        navigate(Common.Home + window.location.search);
     }
 
     const close = () => {
