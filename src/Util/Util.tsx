@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { debug } from 'console';
+
 export const GetSessionCode = async (token: string) => {
     const url = `https://aip.baidubce.com/rest/2.0/face/v1/faceliveness/sessioncode?access_token=${token}`;
 
@@ -70,31 +73,84 @@ export const VideoVerify = async (token:string, sessionCode: string, videoBase64
     debugger
     let success = json.err_msg === 'SUCCESS';
 
+    //参考：
+    //https://ai.baidu.com/ai-doc/FACE/Ikrycq2k2
     if(success)
     {
-        return json.result.code.similarity;
+        return [json.result.code.similarity, json.result.best_image.pic];
     }
 
-    return 0;
+    return [0, ''];
 }
 
 export const VerifyAccount = async (clientId: string, account: string) => {
     const url = `http://106.75.216.135:8004/api/livedetect/verify/${clientId}/${account}`;
 
-    let json = await fetch(url, {
+    let json = await axios.get(url, {
         method: "GET",
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'//'application/json;charset=UTF-8'
-        },
-      
-    }).then(response => response.json()).catch(error => {
+    }).then(response => response.data).catch(error => {
         //alert(error);
 
         return {
             err_msg: 'failed'
         }
     });
+    
+    console.log(json);
+    debugger
+    return json;
+}
+
+export const AddLiveDetectRecord = async (clientId: string, account: string, videoBase64: string, bestImg: string, score: number, result: boolean ) => {
+   
+    const url = 'http://106.75.216.135:8004/api/livedetect/record';
+    /// 如果客户端用content-type: application/json的话，这里可以在入参中使用对象(FromBody)
+    /// 但遇到了preflight的问题，由于现在的方式，服务是host在另一个.net framework IIS服务上，所以遇到了options preflight无法处理的情况
+    /// 只能把content-type改为application/x-www-form-urlencoded;charset=utf-8，这样就不能在入参中使用对象。 只能读取body再做json转换
+
+    const request = axios.create({
+        timeout: 10000
+    });
+
+    let data = {
+        clientId,
+        account,
+        videoBase64,
+        bestImg,
+        score,
+        result
+    }
+    
+    debugger;
+    //提交数据
+    const json = await request({
+        url,
+        method:'post',
+        headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf-8' },
+        data:JSON.stringify(data)//注意这里要使用data，如果需要在url上面拼接参数则需要使用param
+    });
+
+    //  debugger;
+    // let json = await axios.post(url, {
+    //     method: "POST",
+    //     headers: {
+    //         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //     },
+    //     body: JSON.stringify({
+    //         clientId,
+    //         account,
+    //         videoBase64,
+    //         bestImg,
+    //         score,
+    //         result
+    //     })
+    // }).then(response => response.data).catch(error => {
+    //     //alert(error);
+
+    //     return {
+    //         err_msg: 'failed'
+    //     }
+    // });
     
     console.log(json);
 

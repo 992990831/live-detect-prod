@@ -43,5 +43,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "livedetect"
+  "homepage": "livedetect",
+  "devDependencies": {
+    "axios": "^0.26.1"
+  }
 }
