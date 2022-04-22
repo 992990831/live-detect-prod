@@ -69,7 +69,7 @@ function Home() {
   }, [])
 
   const gotoVideoLive = () => {
-    navigate('videolive');
+    navigate(Common.Home + '/videolive' + window.location.search);
   };
 
   // const gotoPicLive = () => {
