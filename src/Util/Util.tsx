@@ -70,7 +70,6 @@ export const VideoVerify = async (token:string, sessionCode: string, videoBase64
     });
     //alert(JSON.stringify(json));
     
-    debugger
     let success = json.err_msg === 'SUCCESS';
 
     //参考：
@@ -97,7 +96,6 @@ export const VerifyAccount = async (clientId: string, account: string) => {
     });
     
     console.log(json);
-    debugger
     return json;
 }
 
@@ -121,7 +119,6 @@ export const AddLiveDetectRecord = async (clientId: string, account: string, vid
         result
     }
     
-    debugger;
     //提交数据
     const json = await request({
         url,

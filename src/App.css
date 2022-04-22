@@ -40,6 +40,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -75,14 +76,52 @@
 
 .comment {
   top: 10vh;
-    position: relative;
-    text-align: center;
-    font-size: 1.5rem;
+  position: relative;
+  text-align: center;
+  font-size: 1.5rem;
 }
 
 .comment-sub {
   top: 10vh;
-    position: relative;
-    text-align: center;
-    font-size: 1.5rem;
+  position: relative;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.home-sub-title {
+  text-align: center;
+  margin-top: 10vh;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.home-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 80px;
+}
+
+.home-notice {
+  color: black;
+  font-size: 1rem;
+  width: 50vw;
+  margin: 0 auto;
+  line-height: 40px;
+  list-style: none;
+  padding: 0px;
+}
+
+.home-notice img {
+  height: 20px;
+  margin-right: 18px;
+}
+
+.home-notice li {
+  line-height: 60px;
+  justify-content: center;
+  display: flex;
+  align-content: center;
+  align-items: center;
 }

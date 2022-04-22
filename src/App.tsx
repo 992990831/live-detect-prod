@@ -5,6 +5,7 @@ import { Success } from './Pages/Success';
 import { Fail } from './Pages/Fail';
 import { PicLive } from './Pages/PicLive';
 import { VideoLive } from './Pages/VideoLive';
+import Terms from './Pages/Terms';
 import Unauthorized from './Pages/Unauthorized';
 
 //这里因为用了browserrouter，所以要加。如果用hashrouter就不用了。
@@ -16,7 +17,9 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path={Common.Home+"/"} element={<VideoLive></VideoLive>} />
+          <Route path={Common.Home+"/"} element={<Home></Home>} />
+          <Route path={Common.Home+"/terms"} element={<Terms></Terms>} />
+          {/* <Route path={Common.Home+"/"} element={<VideoLive></VideoLive>} /> */}
           <Route path={Common.Home+"/success"} element={<Success></Success>} />
           <Route path={Common.Home+"/fail"} element={<Fail></Fail>} />
           <Route path={Common.Home+"/piclive"} element={<PicLive></PicLive>} />
