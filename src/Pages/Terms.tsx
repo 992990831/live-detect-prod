@@ -1,9 +1,19 @@
-import { Button, Space } from 'antd-mobile';
+import React, { useEffect, useState } from 'react';
+import { Button, Space, Mask, DotLoading } from 'antd-mobile';
 import { useNavigate } from "react-router-dom";
 import { Common } from '../Common';
 
 const Terms = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [terms, setTerms] = useState('');
+
+    useEffect(()=>{
+        const localTerms = localStorage.getItem('terms');
+        localTerms &&  setTerms(localTerms);
+
+        setLoading(false);
+    });
 
     return (
         <>
@@ -12,7 +22,9 @@ const Terms = () => {
                     功能说明
                 </h2>
                 <div>
-                    视频认证操作会对您的脸部信息进行采集，认证前将征得使用您脸部特征进行认证识别的授权。
+                   { 
+                   terms? terms : 
+                   '人脸实名认证操作会对您的身份信息进行认证，保证您的登录信息合法不被人冒充篡改，人挣钱将整的使用您的用户身份信息、人脸面部特质进行人脸识别认证的授权。'}
                 </div>
                 <h2>
                     授权与许可
@@ -36,6 +48,15 @@ const Terms = () => {
                     &nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;
                 </Button>
             </Space>
+            <Mask visible={loading}>
+                <DotLoading color='springgreen' style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '27%',
+                    textAlign: 'center',
+                    fontSize: 'xxx-large'
+                }} />
+            </Mask>
         </>
     );
 }

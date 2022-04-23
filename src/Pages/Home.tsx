@@ -50,6 +50,7 @@ function Home() {
 
           localStorage.setItem('clientId', params.clientId || params.clientid);
           localStorage.setItem('account', response.account);
+          localStorage.setItem('terms', response.terms);
       }
       return true;
   }
