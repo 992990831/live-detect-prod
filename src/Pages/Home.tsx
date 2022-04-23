@@ -86,14 +86,14 @@ function Home() {
       } */}
 
       <p className='home-sub-title'>为保证您的信息安全</p>
-      <p className='home-title'>请进行视频活体验证</p>
+      <p className='home-title'>请进行人脸识别验证</p>
       <ul className='home-notice'>
-        <li><img src={logoUser} />确保本人操作</li>
-        <li><img src={logoLight} />识别光线适中</li>
-        <li><img src={logoFace} />正面对准手机</li>
+        <li><div style={{ backgroundImage:`url(${logoUser})` }} /><span><p className='big-text'>确保本人操作</p><p className='small-text'>非本人操作将无法通过认证</p></span></li>
+        <li><div style={{ backgroundImage:`url(${logoLight})` }} /><span><p className='big-text'>识别光线适中</p><p className='small-text'>请保证光线不要过暗或过亮</p></span></li>
+        <li><div style={{ backgroundImage:`url(${logoFace})` }} /><span><p className='big-text'>正面对准手机</p><p className='small-text'>保持您的脸出现在取景框内</p></span></li>
       </ul>
 
-      <Space wrap block style={{  '--gap-vertical': '12px', position: 'fixed', bottom: '30px', left: '15vw' }} align='center' justify='center' direction='vertical'>
+      <Space wrap block style={{  '--gap-vertical': '12px', position: 'fixed', bottom: '5vh', left: '15vw' }} align='center' justify='center' direction='vertical'>
 
         <Button block color='primary' size='large' shape='rounded' onClick={gotoVideoLive} style={{ width: '70vw' }} disabled={!isEnable}>
           &nbsp;&nbsp;&nbsp;&nbsp;开始视频活体验证&nbsp;&nbsp;&nbsp;&nbsp;

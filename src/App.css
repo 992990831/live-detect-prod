@@ -93,29 +93,47 @@
   margin-top: 10vh;
   font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .home-title {
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 80px;
+  margin-top: 13px;
+  margin-bottom: 15vh;
 }
 
 .home-notice {
   color: black;
   font-size: 1rem;
-  width: 50vw;
+  width: 80vw;
   margin: 0 auto;
   line-height: 40px;
   list-style: none;
   padding: 0px;
 }
 
-.home-notice img {
-  height: 20px;
-  margin-right: 18px;
+.home-notice span {
+  line-height: 40px;
+}
+
+.home-notice .big-text {
+  line-height: 15px;
+}
+
+.home-notice .small-text {
+  line-height: 10px;
+  font-size: 0.8rem;
+}
+
+.home-notice div {
+    height: 35px;
+    width: 35px;
+    background-size: cover;
+    margin-right: 20px;
+    background-color: lightcyan;
+    border-radius: 17px;
 }
 
 .home-notice li {
