@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Space, Mask, DotLoading } from 'antd-mobile';
 import { BrowserRouter as Router, Route, Link, Routes, useNavigate } from "react-router-dom";
-import { GetSessionCode, VideoVerify, AddLiveDetectRecord } from '../../Util/Util';
+import { GetSessionCode, VideoVerify, AddLiveDetectRecord, AddLiveDetectCode } from '../../Util/Util';
 import avator from '../../assets/images/avator.png';
 import './index.css';
 //这里因为用了browserrouter，所以要加。如果用hashrouter就不用了。
@@ -23,10 +23,11 @@ export const VideoLive = () => {
 
     const [clientId, setClientId] = useState('');
     const [account, setAccount] = useState('');
+    const [transId, setTransId] = useState('');
 
     //验证商户号(ClientId)和账号(Account)
     //url中的account是加密后的
-    const Verify = async ():Promise<boolean> => {
+    const Verify = async ():Promise<any> => {
         let params: any = { clientId: '', account: '' };
         if (window.location.search) {
             params = queryString.parse(window.location.search);
@@ -35,8 +36,8 @@ export const VideoLive = () => {
             params = queryString.parse(window.location.hash.split('?')[1]);
         }
     
-        //写两个，防止大小写错误
-        let { clientId, clientid, account } = params;
+        //写两个clientId，防止大小写错误
+        let { clientId, clientid, account, transId } = params;
     
         if (!(clientId || clientid) || !account) //必须要在url中传入clientId和account
         {
@@ -53,17 +54,16 @@ export const VideoLive = () => {
         else {
             setClientId(params.clientId || params.clientid);
             setAccount(response.account);
+            setTransId(transId);
 
             localStorage.setItem('clientId', params.clientId || params.clientid);
             localStorage.setItem('account', response.account);
+            localStorage.setItem('transId', transId);
         }
-        return true;
+        return [params.clientId || params.clientid, response.account, transId];
     }
 
     useEffect(() => {
-        //AddLiveDetectRecord('111', '111', '1111', '2222', 1, true);
-        
-        //return;
         //因为useEffect不支持async/awiat，所以用的workaround
         const fn = async () =>{
             let result = await Verify();
@@ -89,6 +89,8 @@ export const VideoLive = () => {
                     setSessionCode(result[0]);
                     setActions(result[1]);
                 });
+
+                AddLiveDetectCode(result[0], result[1], result[2]);
             }
         };
 
@@ -132,7 +134,7 @@ export const VideoLive = () => {
                             navigate(Common.Home + '/fail' + window.location.search);
                         }
 
-                        AddLiveDetectRecord(clientId, account, videoBase64, results[1], results[0], results[0]>0.75);
+                        AddLiveDetectRecord(clientId, account, videoBase64, results[1], results[0], results[0]>0.75, transId);
 
                         setLoading(false);
                     });

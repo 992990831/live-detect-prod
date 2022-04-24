@@ -99,7 +99,7 @@ export const VerifyAccount = async (clientId: string, account: string) => {
     return json;
 }
 
-export const AddLiveDetectRecord = async (clientId: string, account: string, videoBase64: string, bestImg: string, score: number, result: boolean ) => {
+export const AddLiveDetectRecord = async (clientId: string, account: string, videoBase64: string, bestImg: string, score: number, result: boolean, transId: string ) => {
    
     const url = 'http://106.75.216.135:8004/api/livedetect/record';
     /// 如果客户端用content-type: application/json的话，这里可以在入参中使用对象(FromBody)
@@ -116,7 +116,8 @@ export const AddLiveDetectRecord = async (clientId: string, account: string, vid
         videoBase64,
         bestImg,
         score,
-        result
+        result,
+        transId
     }
     
     //提交数据
@@ -152,4 +153,30 @@ export const AddLiveDetectRecord = async (clientId: string, account: string, vid
     console.log(json);
 
     return json;
+}
+
+export const AddLiveDetectCode = async (clientId: string, account: string, transId: string ) => {
+   
+    const url = 'http://106.75.216.135:8004/api/livedetect/code';
+    /// 如果客户端用content-type: application/json的话，这里可以在入参中使用对象(FromBody)
+    /// 但遇到了preflight的问题，由于现在的方式，服务是host在另一个.net framework IIS服务上，所以遇到了options preflight无法处理的情况
+    /// 只能把content-type改为application/x-www-form-urlencoded;charset=utf-8，这样就不能在入参中使用对象。 只能读取body再做json转换
+
+    const request = axios.create({
+        timeout: 10000
+    });
+
+    let data = {
+        clientId,
+        account,       
+        transId
+    }
+    
+    //提交数据
+    const json = await request({
+        url,
+        method:'post',
+        headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf-8' },
+        data:JSON.stringify(data)//注意这里要使用data，如果需要在url上面拼接参数则需要使用param
+    });
 }
