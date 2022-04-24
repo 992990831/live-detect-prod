@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Space, Mask, DotLoading } from 'antd-mobile';
 import { BrowserRouter as Router, Route, Link, Routes, useNavigate } from "react-router-dom";
-import { GetSessionCode, VideoVerify, AddLiveDetectRecord, AddLiveDetectCode } from '../../Util/Util';
+import { GetSessionCode, VideoVerify, AddLiveDetectRecord, AddLiveDetectCode, ClientCallback } from '../../Util/Util';
 import avator from '../../assets/images/avator.png';
 import './index.css';
 //这里因为用了browserrouter，所以要加。如果用hashrouter就不用了。
@@ -37,7 +37,7 @@ export const VideoLive = () => {
         }
     
         //写两个clientId，防止大小写错误
-        let { clientId, clientid, account, transId } = params;
+        let { clientId, clientid, account, transId, transid } = params;
     
         if (!(clientId || clientid) || !account) //必须要在url中传入clientId和account
         {
@@ -54,7 +54,7 @@ export const VideoLive = () => {
         else {
             setClientId(params.clientId || params.clientid);
             setAccount(response.account);
-            setTransId(transId);
+            setTransId(params.transId || params.transid);
 
             localStorage.setItem('clientId', params.clientId || params.clientid);
             localStorage.setItem('account', response.account);
@@ -134,8 +134,7 @@ export const VideoLive = () => {
                             navigate(Common.Home + '/fail' + window.location.search);
                         }
 
-                        AddLiveDetectRecord(clientId, account, videoBase64, results[1], results[0], results[0]>0.75, transId);
-
+                        AddLiveDetectRecord(clientId, account, results[1], results[0], results[0]>0.75, transId);
                         setLoading(false);
                     });
             }
